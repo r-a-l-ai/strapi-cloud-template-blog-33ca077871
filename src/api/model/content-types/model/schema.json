@@ -33,7 +33,7 @@
     },
     "placeholder": {
       "type": "text",
-      "regex": "^[a-zA-Z0-9]$",
+      "regex": "^[a-zA-Z0-9]+$",
       "required": true,
       "unique": true,
       "maxLength": 15
