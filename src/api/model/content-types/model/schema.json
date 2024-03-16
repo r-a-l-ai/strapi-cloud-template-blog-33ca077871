@@ -1,0 +1,41 @@
+{
+  "kind": "collectionType",
+  "collectionName": "models",
+  "info": {
+    "singularName": "model",
+    "pluralName": "models",
+    "displayName": "Model",
+    "description": ""
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "name": {
+      "type": "string",
+      "regex": "/^[a-zA-Z0-9-_]+$/",
+      "required": true,
+      "maxLength": 20,
+      "unique": true
+    },
+    "salutation": {
+      "type": "text",
+      "required": true,
+      "minLength": 10,
+      "maxLength": 200
+    },
+    "compliancetext": {
+      "type": "text",
+      "required": true,
+      "minLength": 200
+    },
+    "placeholder": {
+      "type": "text",
+      "regex": "/^[a-zA-Z0-9]$/",
+      "required": true,
+      "unique": true,
+      "maxLength": 15
+    }
+  }
+}
