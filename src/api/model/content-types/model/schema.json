@@ -14,7 +14,7 @@
   "attributes": {
     "name": {
       "type": "string",
-      "regex": "/^[a-zA-Z0-9-_]+$/",
+      "regex": "^[a-zA-Z0-9-_]+$",
       "required": true,
       "maxLength": 20,
       "unique": true
@@ -28,11 +28,12 @@
     "compliancetext": {
       "type": "text",
       "required": true,
-      "minLength": 200
+      "minLength": 5,
+      "maxLength": 200
     },
     "placeholder": {
       "type": "text",
-      "regex": "/^[a-zA-Z0-9]$/",
+      "regex": "^[a-zA-Z0-9]$",
       "required": true,
       "unique": true,
       "maxLength": 15
