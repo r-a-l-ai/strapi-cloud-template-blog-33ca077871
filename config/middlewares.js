@@ -10,6 +10,6 @@ module.exports = [
   'strapi::favicon',
   'strapi::public',
   {
-    name: 'mindsbd',
+    name: 'global::mindsdb',
   },
 ];

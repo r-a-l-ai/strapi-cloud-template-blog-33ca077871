@@ -37,6 +37,11 @@
       "required": true,
       "unique": true,
       "maxLength": 15
+    },
+    "customer": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "api::customer.customer"
     }
   }
 }
