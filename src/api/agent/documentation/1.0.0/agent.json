@@ -1,5 +1,5 @@
 {
-  "/bot-users": {
+  "/agents": {
     "get": {
       "responses": {
         "200": {
@@ -7,7 +7,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/BotUserListResponse"
+                "$ref": "#/components/schemas/AgentListResponse"
               }
             }
           }
@@ -64,7 +64,7 @@
         }
       },
       "tags": [
-        "Bot-user"
+        "Agent"
       ],
       "parameters": [
         {
@@ -169,7 +169,7 @@
           }
         }
       ],
-      "operationId": "get/bot-users"
+      "operationId": "get/agents"
     },
     "post": {
       "responses": {
@@ -178,7 +178,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/BotUserResponse"
+                "$ref": "#/components/schemas/AgentResponse"
               }
             }
           }
@@ -235,23 +235,23 @@
         }
       },
       "tags": [
-        "Bot-user"
+        "Agent"
       ],
       "parameters": [],
-      "operationId": "post/bot-users",
+      "operationId": "post/agents",
       "requestBody": {
         "required": true,
         "content": {
           "application/json": {
             "schema": {
-              "$ref": "#/components/schemas/BotUserRequest"
+              "$ref": "#/components/schemas/AgentRequest"
             }
           }
         }
       }
     }
   },
-  "/bot-users/{id}": {
+  "/agents/{id}": {
     "get": {
       "responses": {
         "200": {
@@ -259,7 +259,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/BotUserResponse"
+                "$ref": "#/components/schemas/AgentResponse"
               }
             }
           }
@@ -316,7 +316,7 @@
         }
       },
       "tags": [
-        "Bot-user"
+        "Agent"
       ],
       "parameters": [
         {
@@ -330,7 +330,7 @@
           }
         }
       ],
-      "operationId": "get/bot-users/{id}"
+      "operationId": "get/agents/{id}"
     },
     "put": {
       "responses": {
@@ -339,7 +339,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/BotUserResponse"
+                "$ref": "#/components/schemas/AgentResponse"
               }
             }
           }
@@ -396,7 +396,7 @@
         }
       },
       "tags": [
-        "Bot-user"
+        "Agent"
       ],
       "parameters": [
         {
@@ -410,13 +410,13 @@
           }
         }
       ],
-      "operationId": "put/bot-users/{id}",
+      "operationId": "put/agents/{id}",
       "requestBody": {
         "required": true,
         "content": {
           "application/json": {
             "schema": {
-              "$ref": "#/components/schemas/BotUserRequest"
+              "$ref": "#/components/schemas/AgentRequest"
             }
           }
         }
@@ -487,7 +487,7 @@
         }
       },
       "tags": [
-        "Bot-user"
+        "Agent"
       ],
       "parameters": [
         {
@@ -501,7 +501,7 @@
           }
         }
       ],
-      "operationId": "delete/bot-users/{id}"
+      "operationId": "delete/agents/{id}"
     }
   }
 }

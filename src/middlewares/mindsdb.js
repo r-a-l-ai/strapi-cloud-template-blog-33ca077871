@@ -2,7 +2,7 @@ const axios = require('axios');
 
 module.exports = (config, {strapi}) => {
   return async (ctx, next) => {
-    if (ctx.url.match(/^\/models\/query/)) {
+    if (ctx.url.match(/^\/api\/model\/query/)) {
       try {
         ctx.state.mindsdbResponse = await axios.post('https://lades.sk/mindsdb/api/sql/query', ctx.request.body, {
           headers: {
