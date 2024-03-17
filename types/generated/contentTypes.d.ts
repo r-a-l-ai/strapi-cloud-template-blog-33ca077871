@@ -789,12 +789,13 @@ export interface ApiAgentAgent extends Schema.CollectionType {
     singularName: 'agent';
     pluralName: 'agents';
     displayName: 'Agent';
+    description: '';
   };
   options: {
     draftAndPublish: true;
   };
   attributes: {
-    name: Attribute.String;
+    name: Attribute.String & Attribute.Required & Attribute.Unique;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
     publishedAt: Attribute.DateTime;
@@ -813,6 +814,37 @@ export interface ApiAgentAgent extends Schema.CollectionType {
   };
 }
 
+export interface ApiClientClient extends Schema.CollectionType {
+  collectionName: 'clients';
+  info: {
+    singularName: 'client';
+    pluralName: 'clients';
+    displayName: 'Client';
+    description: '';
+  };
+  options: {
+    draftAndPublish: false;
+  };
+  attributes: {
+    uid: Attribute.UID & Attribute.Required;
+    name: Attribute.String;
+    createdAt: Attribute.DateTime;
+    updatedAt: Attribute.DateTime;
+    createdBy: Attribute.Relation<
+      'api::client.client',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+    updatedBy: Attribute.Relation<
+      'api::client.client',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+  };
+}
+
 export interface ApiConversationConversation extends Schema.CollectionType {
   collectionName: 'conversations';
   info: {
@@ -822,13 +854,31 @@ export interface ApiConversationConversation extends Schema.CollectionType {
     description: '';
   };
   options: {
-    draftAndPublish: true;
+    draftAndPublish: false;
   };
   attributes: {
-    conversation_text: Attribute.Text;
+    customer: Attribute.Relation<
+      'api::conversation.conversation',
+      'manyToOne',
+      'api::customer.customer'
+    >;
+    messages: Attribute.Relation<
+      'api::conversation.conversation',
+      'oneToMany',
+      'api::message.message'
+    >;
+    agent: Attribute.Relation<
+      'api::conversation.conversation',
+      'oneToOne',
+      'api::agent.agent'
+    >;
+    client: Attribute.Relation<
+      'api::conversation.conversation',
+      'oneToOne',
+      'api::client.client'
+    >;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
-    publishedAt: Attribute.DateTime;
     createdBy: Attribute.Relation<
       'api::conversation.conversation',
       'oneToOne',
@@ -857,6 +907,16 @@ export interface ApiCustomerCustomer extends Schema.CollectionType {
   };
   attributes: {
     Name: Attribute.String;
+    agents: Attribute.Relation<
+      'api::customer.customer',
+      'oneToMany',
+      'api::agent.agent'
+    >;
+    conversations: Attribute.Relation<
+      'api::customer.customer',
+      'oneToMany',
+      'api::conversation.conversation'
+    >;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
     publishedAt: Attribute.DateTime;
@@ -881,12 +941,19 @@ export interface ApiMessageMessage extends Schema.CollectionType {
     singularName: 'message';
     pluralName: 'messages';
     displayName: 'Message';
+    description: '';
   };
   options: {
     draftAndPublish: false;
   };
   attributes: {
     message_text: Attribute.Text;
+    conversation: Attribute.Relation<
+      'api::message.message',
+      'manyToOne',
+      'api::conversation.conversation'
+    >;
+    from_client: Attribute.Boolean;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
     createdBy: Attribute.Relation<
@@ -981,6 +1048,7 @@ declare module '@strapi/types' {
       'plugin::users-permissions.role': PluginUsersPermissionsRole;
       'plugin::users-permissions.user': PluginUsersPermissionsUser;
       'api::agent.agent': ApiAgentAgent;
+      'api::client.client': ApiClientClient;
       'api::conversation.conversation': ApiConversationConversation;
       'api::customer.customer': ApiCustomerCustomer;
       'api::message.message': ApiMessageMessage;

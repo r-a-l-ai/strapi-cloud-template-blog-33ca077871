@@ -1,0 +1,23 @@
+{
+  "kind": "collectionType",
+  "collectionName": "clients",
+  "info": {
+    "singularName": "client",
+    "pluralName": "clients",
+    "displayName": "Client",
+    "description": ""
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "uid": {
+      "type": "uid",
+      "required": true
+    },
+    "name": {
+      "type": "string"
+    }
+  }
+}
