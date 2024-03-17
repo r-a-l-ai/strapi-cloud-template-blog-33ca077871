@@ -12,13 +12,12 @@ module.exports =  (config, {strapi}) => {
         });
 
         ctx.body = response.data;
-        
       } catch (error) {
         console.error('Error querying MindsDB:', error);
         ctx.send({ message: 'Failed to query MindsDB', error }, 500);
       }
     } else {
-      return next();
+      await next();
     }
   };
 };
