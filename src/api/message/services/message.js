@@ -1,9 +1,9 @@
 'use strict';
 
 /**
- * bot-user service
+ * message service
  */
 
 const { createCoreService } = require('@strapi/strapi').factories;
 
-module.exports = createCoreService('api::bot-user.bot-user');
+module.exports = createCoreService('api::message.message');

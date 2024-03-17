@@ -2,9 +2,9 @@ const axios = require('axios');
 
 module.exports = (config, {strapi}) => {
   return async (ctx, next) => {
-    if (ctx.url.match(/^\/models\/query/)) {
+    if (ctx.url.match(/^\/api\/model\/query/)) {
       try {
-        ctx.state.mindsdbResponse = await axios.post('https://lades.sk/mindsdb/api/sql/query', ctx.request.body, {
+        ctx.state.mindsdbResponse = await axios.post('https://lades.sk/api/sql/query', ctx.request.body, {
           headers: {
             'Content-Type': 'application/json',
             'Authorization': `Bearer ${process.env.MINDSDB_BEARER_TOKEN}` // Use the environment variable

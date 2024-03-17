@@ -1,9 +1,9 @@
 'use strict';
 
 /**
- * bot-user router
+ * message router
  */
 
 const { createCoreRouter } = require('@strapi/strapi').factories;
 
-module.exports = createCoreRouter('api::bot-user.bot-user');
+module.exports = createCoreRouter('api::message.message');

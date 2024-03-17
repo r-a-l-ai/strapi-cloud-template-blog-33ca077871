@@ -783,34 +783,29 @@ export interface PluginUsersPermissionsUser extends Schema.CollectionType {
   };
 }
 
-export interface ApiBotUserBotUser extends Schema.CollectionType {
-  collectionName: 'bot_users';
+export interface ApiAgentAgent extends Schema.CollectionType {
+  collectionName: 'agents';
   info: {
-    singularName: 'bot-user';
-    pluralName: 'bot-users';
-    displayName: 'Bot User';
+    singularName: 'agent';
+    pluralName: 'agents';
+    displayName: 'Agent';
   };
   options: {
     draftAndPublish: true;
   };
   attributes: {
-    uuid: Attribute.UID;
-    conversation: Attribute.Relation<
-      'api::bot-user.bot-user',
-      'oneToOne',
-      'api::conversation.conversation'
-    >;
+    name: Attribute.String;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
     publishedAt: Attribute.DateTime;
     createdBy: Attribute.Relation<
-      'api::bot-user.bot-user',
+      'api::agent.agent',
       'oneToOne',
       'admin::user'
     > &
       Attribute.Private;
     updatedBy: Attribute.Relation<
-      'api::bot-user.bot-user',
+      'api::agent.agent',
       'oneToOne',
       'admin::user'
     > &
@@ -831,11 +826,6 @@ export interface ApiConversationConversation extends Schema.CollectionType {
   };
   attributes: {
     conversation_text: Attribute.Text;
-    bot_user: Attribute.Relation<
-      'api::conversation.conversation',
-      'oneToOne',
-      'api::bot-user.bot-user'
-    >;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
     publishedAt: Attribute.DateTime;
@@ -878,6 +868,35 @@ export interface ApiCustomerCustomer extends Schema.CollectionType {
       Attribute.Private;
     updatedBy: Attribute.Relation<
       'api::customer.customer',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+  };
+}
+
+export interface ApiMessageMessage extends Schema.CollectionType {
+  collectionName: 'messages';
+  info: {
+    singularName: 'message';
+    pluralName: 'messages';
+    displayName: 'Message';
+  };
+  options: {
+    draftAndPublish: false;
+  };
+  attributes: {
+    message_text: Attribute.Text;
+    createdAt: Attribute.DateTime;
+    updatedAt: Attribute.DateTime;
+    createdBy: Attribute.Relation<
+      'api::message.message',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+    updatedBy: Attribute.Relation<
+      'api::message.message',
       'oneToOne',
       'admin::user'
     > &
@@ -961,9 +980,10 @@ declare module '@strapi/types' {
       'plugin::users-permissions.permission': PluginUsersPermissionsPermission;
       'plugin::users-permissions.role': PluginUsersPermissionsRole;
       'plugin::users-permissions.user': PluginUsersPermissionsUser;
-      'api::bot-user.bot-user': ApiBotUserBotUser;
+      'api::agent.agent': ApiAgentAgent;
       'api::conversation.conversation': ApiConversationConversation;
       'api::customer.customer': ApiCustomerCustomer;
+      'api::message.message': ApiMessageMessage;
       'api::model.model': ApiModelModel;
     }
   }
