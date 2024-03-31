@@ -14,15 +14,8 @@
   "attributes": {
     "customer": {
       "type": "relation",
-      "relation": "manyToOne",
-      "target": "api::customer.customer",
-      "inversedBy": "conversations"
-    },
-    "messages": {
-      "type": "relation",
-      "relation": "oneToMany",
-      "target": "api::message.message",
-      "mappedBy": "conversation"
+      "relation": "oneToOne",
+      "target": "api::customer.customer"
     },
     "agent": {
       "type": "relation",
@@ -33,6 +26,10 @@
       "type": "relation",
       "relation": "oneToOne",
       "target": "api::client.client"
+    },
+    "conversationUid": {
+      "type": "uid",
+      "required": true
     }
   }
 }

@@ -15,14 +15,13 @@
     "message_text": {
       "type": "text"
     },
-    "conversation": {
-      "type": "relation",
-      "relation": "manyToOne",
-      "target": "api::conversation.conversation",
-      "inversedBy": "messages"
-    },
     "from_client": {
       "type": "boolean"
+    },
+    "conversation": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "api::conversation.conversation"
     }
   }
 }

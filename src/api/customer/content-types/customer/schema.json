@@ -19,12 +19,6 @@
       "type": "relation",
       "relation": "oneToMany",
       "target": "api::agent.agent"
-    },
-    "conversations": {
-      "type": "relation",
-      "relation": "oneToMany",
-      "target": "api::conversation.conversation",
-      "mappedBy": "customer"
     }
   }
 }

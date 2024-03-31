@@ -828,6 +828,7 @@ export interface ApiClientClient extends Schema.CollectionType {
   attributes: {
     uid: Attribute.UID & Attribute.Required;
     name: Attribute.String;
+    surname: Attribute.String;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
     createdBy: Attribute.Relation<
@@ -859,13 +860,8 @@ export interface ApiConversationConversation extends Schema.CollectionType {
   attributes: {
     customer: Attribute.Relation<
       'api::conversation.conversation',
-      'manyToOne',
+      'oneToOne',
       'api::customer.customer'
-    >;
-    messages: Attribute.Relation<
-      'api::conversation.conversation',
-      'oneToMany',
-      'api::message.message'
     >;
     agent: Attribute.Relation<
       'api::conversation.conversation',
@@ -877,6 +873,7 @@ export interface ApiConversationConversation extends Schema.CollectionType {
       'oneToOne',
       'api::client.client'
     >;
+    conversationUid: Attribute.UID & Attribute.Required;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
     createdBy: Attribute.Relation<
@@ -912,11 +909,6 @@ export interface ApiCustomerCustomer extends Schema.CollectionType {
       'oneToMany',
       'api::agent.agent'
     >;
-    conversations: Attribute.Relation<
-      'api::customer.customer',
-      'oneToMany',
-      'api::conversation.conversation'
-    >;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
     publishedAt: Attribute.DateTime;
@@ -948,12 +940,12 @@ export interface ApiMessageMessage extends Schema.CollectionType {
   };
   attributes: {
     message_text: Attribute.Text;
+    from_client: Attribute.Boolean;
     conversation: Attribute.Relation<
       'api::message.message',
-      'manyToOne',
+      'oneToOne',
       'api::conversation.conversation'
     >;
-    from_client: Attribute.Boolean;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
     createdBy: Attribute.Relation<
