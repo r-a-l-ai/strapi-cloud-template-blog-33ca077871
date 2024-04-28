@@ -1,5 +1,4 @@
 const axios = require('axios');
-const { useLayoutEffect } = require('react');
 
 module.exports = (config, {strapi}) => {
   return async (ctx, next) => {

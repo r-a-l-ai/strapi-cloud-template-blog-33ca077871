@@ -1,9 +1,8 @@
 // src/api/models/controllers/query.js
 module.exports = {
-    async forwardToMindsDB(ctx) {
+    async forwardToAutoGen(ctx) {
       try {
-        // Assuming your middleware modifies ctx.state.mindsdbResponse
-        const response = ctx.state.mindsdbResponse;
+        const response = ctx.state.autogenResponse;
         ctx.body = response;
       } catch (error) {
         ctx.body = error;
