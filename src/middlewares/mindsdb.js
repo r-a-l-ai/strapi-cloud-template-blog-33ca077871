@@ -5,22 +5,22 @@ module.exports = (config, {strapi}) => {
     if (ctx.url.match(/^\/api\/model\/query/)) {
       try {
         const question = ctx.request.body.query;
-        const conversation = ctx.request.body.conversation;
+        let conversation = ctx.request.body.conversation;
 
         let entityCheck = await strapi.db.query('api::conversation.conversation').findMany({
           select: ['id'],
-          where: { conversation_text: conversation }
+          where: { conversationUid: conversation }
         });
         let conversationId = -1;
         if (entityCheck.length == 0)
         {
-          let insertConversationResult = await strapi.entityService.create('api::conversation.conversation', {
+          let insertConversationResult = await strapi.entityService.create('api::conversation.conversation', { 
             data: {
-              conversation_text: conversation
+              conversationUid: conversation
             },
           });
-
           conversationId = insertConversationResult.id;
+          conversation = insertConversationResult.conversationUid
         }
         else
         {
@@ -29,7 +29,7 @@ module.exports = (config, {strapi}) => {
 
         let insertMessageResult = await strapi.entityService.create('api::message.message', {
           data: {
-            message_text: conversation,
+            message_text: question,
             conversation: conversationId
           }
         });
@@ -43,7 +43,7 @@ module.exports = (config, {strapi}) => {
           },
         });
 
-        ctx.body = mindsDbRespone.data.data[0][0];
+        ctx.body = `{"answer" : ${JSON.stringify(mindsDbRespone.data.data[0][0])}, "conversation": "${conversation}"}`;
 
       } catch (error) {
         console.error('Error querying MindsDB: %s \n body : %s\n mindsDBUrl:%s', error, ctx.request.body, process.env.MINDSDB_URL);
