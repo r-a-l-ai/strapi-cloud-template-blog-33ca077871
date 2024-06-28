@@ -1,0 +1,35 @@
+{
+  "kind": "collectionType",
+  "collectionName": "products",
+  "info": {
+    "singularName": "product",
+    "pluralName": "products",
+    "displayName": "Product",
+    "description": ""
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "product_data": {
+      "type": "json",
+      "required": true
+    },
+    "product_id": {
+      "type": "integer"
+    },
+    "product_name": {
+      "type": "string"
+    },
+    "json_hash": {
+      "type": "string"
+    },
+    "manual": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "api::manual.manual",
+      "mappedBy": "product"
+    }
+  }
+}

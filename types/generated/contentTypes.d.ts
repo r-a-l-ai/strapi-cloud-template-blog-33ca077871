@@ -927,6 +927,42 @@ export interface ApiCustomerCustomer extends Schema.CollectionType {
   };
 }
 
+export interface ApiManualManual extends Schema.CollectionType {
+  collectionName: 'manuals';
+  info: {
+    singularName: 'manual';
+    pluralName: 'manuals';
+    displayName: 'Manual';
+    description: '';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    file: Attribute.Media;
+    product: Attribute.Relation<
+      'api::manual.manual',
+      'oneToOne',
+      'api::product.product'
+    >;
+    createdAt: Attribute.DateTime;
+    updatedAt: Attribute.DateTime;
+    publishedAt: Attribute.DateTime;
+    createdBy: Attribute.Relation<
+      'api::manual.manual',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+    updatedBy: Attribute.Relation<
+      'api::manual.manual',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+  };
+}
+
 export interface ApiMessageMessage extends Schema.CollectionType {
   collectionName: 'messages';
   info: {
@@ -1021,6 +1057,44 @@ export interface ApiModelModel extends Schema.CollectionType {
   };
 }
 
+export interface ApiProductProduct extends Schema.CollectionType {
+  collectionName: 'products';
+  info: {
+    singularName: 'product';
+    pluralName: 'products';
+    displayName: 'Product';
+    description: '';
+  };
+  options: {
+    draftAndPublish: false;
+  };
+  attributes: {
+    product_data: Attribute.JSON & Attribute.Required;
+    product_id: Attribute.Integer;
+    product_name: Attribute.String;
+    json_hash: Attribute.String;
+    manual: Attribute.Relation<
+      'api::product.product',
+      'oneToOne',
+      'api::manual.manual'
+    >;
+    createdAt: Attribute.DateTime;
+    updatedAt: Attribute.DateTime;
+    createdBy: Attribute.Relation<
+      'api::product.product',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+    updatedBy: Attribute.Relation<
+      'api::product.product',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+  };
+}
+
 declare module '@strapi/types' {
   export module Shared {
     export interface ContentTypes {
@@ -1043,8 +1117,10 @@ declare module '@strapi/types' {
       'api::client.client': ApiClientClient;
       'api::conversation.conversation': ApiConversationConversation;
       'api::customer.customer': ApiCustomerCustomer;
+      'api::manual.manual': ApiManualManual;
       'api::message.message': ApiMessageMessage;
       'api::model.model': ApiModelModel;
+      'api::product.product': ApiProductProduct;
     }
   }
 }
