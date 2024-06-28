@@ -1070,7 +1070,7 @@ export interface ApiProductProduct extends Schema.CollectionType {
   };
   attributes: {
     product_data: Attribute.JSON & Attribute.Required;
-    product_id: Attribute.Integer;
+    product_id: Attribute.Integer & Attribute.Required & Attribute.Unique;
     product_name: Attribute.String;
     json_hash: Attribute.String;
     manual: Attribute.Relation<
