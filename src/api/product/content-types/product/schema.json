@@ -16,7 +16,7 @@
       "type": "json",
       "required": true
     },
-    "product_id": {
+    "item_id": {
       "type": "integer",
       "unique": true,
       "required": true
