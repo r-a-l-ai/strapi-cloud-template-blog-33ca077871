@@ -16,5 +16,6 @@ services:
       API_TOKEN_SALT: ${API_TOKEN_SALT}
       ADMIN_JWT_SECRET: ${JWT_SECRET}
       JWT_SECRET: ${JWT_SECRET}
+      URL: ${URL}
     volumes:
       - /opt/ralai/middleware-strapi/uploads:/opt/app/public/uploads
