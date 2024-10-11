@@ -10,5 +10,6 @@ services:
       DATABASE_NAME: ${DATABASE_NAME}
       DATABASE_USERNAME: ${DATABASE_USERNAME}
       DATABASE_PASSWORD: ${DATABASE_PASSWORD}
+      DATABASE_SSL: true
     volumes:
       - /opt/ralai/middleware-strapi/uploads:/opt/app/public/uploads
