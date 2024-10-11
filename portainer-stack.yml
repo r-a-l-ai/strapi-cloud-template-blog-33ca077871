@@ -12,5 +12,7 @@ services:
       DATABASE_PASSWORD: ${DATABASE_PASSWORD}
       DATABASE_SSL: true
       DATABASE_SSL_REJECT_UNAUTHORIZED: false
+      APP_KEYS: ${APP_KEYS}
+      API_TOKEN_SALT: ${API_TOKEN_SALT}
     volumes:
       - /opt/ralai/middleware-strapi/uploads:/opt/app/public/uploads
