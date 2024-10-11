@@ -14,5 +14,6 @@ services:
       DATABASE_SSL_REJECT_UNAUTHORIZED: false
       APP_KEYS: ${APP_KEYS}
       API_TOKEN_SALT: ${API_TOKEN_SALT}
+      AUTH_SECRET: ${AUTH_SECRET}
     volumes:
       - /opt/ralai/middleware-strapi/uploads:/opt/app/public/uploads
