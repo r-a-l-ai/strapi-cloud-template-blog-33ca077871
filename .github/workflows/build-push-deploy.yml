@@ -1,4 +1,4 @@
-name: Build and Push Docker Image
+name: Build, Push, and Deploy Docker Image
 
 on:
   push:
@@ -29,3 +29,12 @@ jobs:
         context: .
         push: true
         tags: ghcr.io/r-a-l-ai/middleware-strapi:${{ github.ref_name }}
+
+  deploy:
+    runs-on: ubuntu-latest
+    needs: build
+
+    steps:
+    - name: Deploy to server
+      run: |
+        curl -X POST "https://lades.sk:9443/api/stacks/webhooks/7b9a253e-ff93-40e7-b231-80c0ed6cce19?IMAGE_VERSION=${{ github.ref_name }}"

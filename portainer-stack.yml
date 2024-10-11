@@ -2,7 +2,7 @@ version: '3.8'
 
 services:
   middleware-strapi:
-    image: ghcr.io/r-a-l-ai/middleware-strapi:0.0.1
+    image: ghcr.io/r-a-l-ai/middleware-strapi:${IMAGE_VERSION}
     ports:
       - "1337:1337"
     environment:
