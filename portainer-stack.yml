@@ -1,5 +1,3 @@
-version: '3.8'
-
 services:
   middleware-strapi:
     image: ghcr.io/r-a-l-ai/middleware-strapi:${IMAGE_VERSION}
