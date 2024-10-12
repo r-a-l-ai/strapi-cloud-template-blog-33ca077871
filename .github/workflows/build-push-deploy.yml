@@ -28,7 +28,9 @@ jobs:
       with:
         context: .
         push: true
-        tags: ghcr.io/r-a-l-ai/middleware-strapi:${{ github.ref_name }}
+        tags: |
+          ghcr.io/r-a-l-ai/middleware-strapi:${{ github.ref_name }}
+          ghcr.io/r-a-l-ai/middleware-strapi:latest
 
   deploy:
     runs-on: ubuntu-latest
