@@ -20,11 +20,8 @@
         "files"
       ]
     },
-    "product": {
-      "type": "relation",
-      "relation": "oneToOne",
-      "target": "api::product.product",
-      "inversedBy": "manual"
+    "file_id": {
+      "type": "string"
     }
   }
 }

@@ -961,11 +961,7 @@ export interface ApiManualManual extends Schema.CollectionType {
   };
   attributes: {
     file: Attribute.Media;
-    product: Attribute.Relation<
-      'api::manual.manual',
-      'oneToOne',
-      'api::product.product'
-    >;
+    file_id: Attribute.String;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
     publishedAt: Attribute.DateTime;
@@ -1102,11 +1098,6 @@ export interface ApiProductProduct extends Schema.CollectionType {
     item_id: Attribute.Integer & Attribute.Required & Attribute.Unique;
     product_name: Attribute.String;
     json_hash: Attribute.String;
-    manual: Attribute.Relation<
-      'api::product.product',
-      'oneToOne',
-      'api::manual.manual'
-    >;
     first_seen: Attribute.DateTime;
     last_seen: Attribute.DateTime;
     last_updated: Attribute.DateTime;

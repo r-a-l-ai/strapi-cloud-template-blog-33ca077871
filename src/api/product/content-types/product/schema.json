@@ -27,12 +27,6 @@
     "json_hash": {
       "type": "string"
     },
-    "manual": {
-      "type": "relation",
-      "relation": "oneToOne",
-      "target": "api::manual.manual",
-      "mappedBy": "product"
-    },
     "first_seen": {
       "type": "datetime"
     },
