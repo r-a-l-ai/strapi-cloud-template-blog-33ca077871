@@ -12,16 +12,34 @@
   },
   "pluginOptions": {},
   "attributes": {
-    "message_text": {
+    "content": {
       "type": "text"
     },
-    "from_client": {
-      "type": "boolean"
+    "message_id": {
+      "type": "string"
     },
-    "conversation": {
+    "thread_id": {
       "type": "relation",
       "relation": "oneToOne",
-      "target": "api::conversation.conversation"
+      "target": "api::thread.thread"
+    },
+    "role": {
+      "type": "enumeration",
+      "enum": [
+        "user",
+        "assistant"
+      ]
+    },
+    "timestamp": {
+      "type": "datetime"
+    },
+    "client_id": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "api::client.client"
+    },
+    "additional_data": {
+      "type": "json"
     }
   }
 }

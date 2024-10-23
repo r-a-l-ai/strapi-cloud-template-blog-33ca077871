@@ -12,15 +12,14 @@
   },
   "pluginOptions": {},
   "attributes": {
-    "uid": {
-      "type": "uid",
-      "required": true
-    },
-    "name": {
+    "client_id": {
       "type": "string"
     },
-    "surname": {
-      "type": "string"
+    "first_seen": {
+      "type": "datetime"
+    },
+    "last_seen": {
+      "type": "datetime"
     }
   }
 }

@@ -826,9 +826,9 @@ export interface ApiClientClient extends Schema.CollectionType {
     draftAndPublish: false;
   };
   attributes: {
-    uid: Attribute.UID & Attribute.Required;
-    name: Attribute.String;
-    surname: Attribute.String;
+    client_id: Attribute.String;
+    first_seen: Attribute.DateTime;
+    last_seen: Attribute.DateTime;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
     createdBy: Attribute.Relation<
@@ -839,51 +839,6 @@ export interface ApiClientClient extends Schema.CollectionType {
       Attribute.Private;
     updatedBy: Attribute.Relation<
       'api::client.client',
-      'oneToOne',
-      'admin::user'
-    > &
-      Attribute.Private;
-  };
-}
-
-export interface ApiConversationConversation extends Schema.CollectionType {
-  collectionName: 'conversations';
-  info: {
-    singularName: 'conversation';
-    pluralName: 'conversations';
-    displayName: 'Conversation';
-    description: '';
-  };
-  options: {
-    draftAndPublish: false;
-  };
-  attributes: {
-    customer: Attribute.Relation<
-      'api::conversation.conversation',
-      'oneToOne',
-      'api::customer.customer'
-    >;
-    agent: Attribute.Relation<
-      'api::conversation.conversation',
-      'oneToOne',
-      'api::agent.agent'
-    >;
-    client: Attribute.Relation<
-      'api::conversation.conversation',
-      'oneToOne',
-      'api::client.client'
-    >;
-    conversationUid: Attribute.UID & Attribute.Required;
-    createdAt: Attribute.DateTime;
-    updatedAt: Attribute.DateTime;
-    createdBy: Attribute.Relation<
-      'api::conversation.conversation',
-      'oneToOne',
-      'admin::user'
-    > &
-      Attribute.Private;
-    updatedBy: Attribute.Relation<
-      'api::conversation.conversation',
       'oneToOne',
       'admin::user'
     > &
@@ -975,13 +930,21 @@ export interface ApiMessageMessage extends Schema.CollectionType {
     draftAndPublish: false;
   };
   attributes: {
-    message_text: Attribute.Text;
-    from_client: Attribute.Boolean;
-    conversation: Attribute.Relation<
+    content: Attribute.Text;
+    message_id: Attribute.String;
+    thread_id: Attribute.Relation<
       'api::message.message',
       'oneToOne',
-      'api::conversation.conversation'
+      'api::thread.thread'
     >;
+    role: Attribute.Enumeration<['user', 'assistant']>;
+    timestamp: Attribute.DateTime;
+    client_id: Attribute.Relation<
+      'api::message.message',
+      'oneToOne',
+      'api::client.client'
+    >;
+    additional_data: Attribute.JSON;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
     createdBy: Attribute.Relation<
@@ -1095,6 +1058,36 @@ export interface ApiProductProduct extends Schema.CollectionType {
   };
 }
 
+export interface ApiThreadThread extends Schema.CollectionType {
+  collectionName: 'threads';
+  info: {
+    singularName: 'thread';
+    pluralName: 'threads';
+    displayName: 'Thread';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    thread_id: Attribute.String & Attribute.Required & Attribute.Unique;
+    createdAt: Attribute.DateTime;
+    updatedAt: Attribute.DateTime;
+    publishedAt: Attribute.DateTime;
+    createdBy: Attribute.Relation<
+      'api::thread.thread',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+    updatedBy: Attribute.Relation<
+      'api::thread.thread',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+  };
+}
+
 declare module '@strapi/types' {
   export module Shared {
     export interface ContentTypes {
@@ -1115,12 +1108,12 @@ declare module '@strapi/types' {
       'plugin::users-permissions.user': PluginUsersPermissionsUser;
       'api::agent.agent': ApiAgentAgent;
       'api::client.client': ApiClientClient;
-      'api::conversation.conversation': ApiConversationConversation;
       'api::customer.customer': ApiCustomerCustomer;
       'api::manual.manual': ApiManualManual;
       'api::message.message': ApiMessageMessage;
       'api::model.model': ApiModelModel;
       'api::product.product': ApiProductProduct;
+      'api::thread.thread': ApiThreadThread;
     }
   }
 }
