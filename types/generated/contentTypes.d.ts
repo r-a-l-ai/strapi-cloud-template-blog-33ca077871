@@ -737,7 +737,6 @@ export interface PluginUsersPermissionsUser extends Schema.CollectionType {
   };
   options: {
     draftAndPublish: false;
-    timestamps: true;
   };
   attributes: {
     username: Attribute.String &
@@ -766,6 +765,11 @@ export interface PluginUsersPermissionsUser extends Schema.CollectionType {
       'manyToOne',
       'plugin::users-permissions.role'
     >;
+    customer: Attribute.Relation<
+      'plugin::users-permissions.user',
+      'oneToOne',
+      'api::customer.customer'
+    >;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
     createdBy: Attribute.Relation<
@@ -788,7 +792,7 @@ export interface ApiAgentAgent extends Schema.CollectionType {
   info: {
     singularName: 'agent';
     pluralName: 'agents';
-    displayName: 'Agent';
+    displayName: 'Assistant';
     description: '';
   };
   options: {
@@ -796,6 +800,12 @@ export interface ApiAgentAgent extends Schema.CollectionType {
   };
   attributes: {
     name: Attribute.String & Attribute.Required & Attribute.Unique;
+    customer: Attribute.Relation<
+      'api::agent.agent',
+      'oneToOne',
+      'api::customer.customer'
+    >;
+    assistant_id: Attribute.String & Attribute.Required & Attribute.Unique;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
     publishedAt: Attribute.DateTime;
@@ -859,11 +869,6 @@ export interface ApiCustomerCustomer extends Schema.CollectionType {
   };
   attributes: {
     Name: Attribute.String;
-    agents: Attribute.Relation<
-      'api::customer.customer',
-      'oneToMany',
-      'api::agent.agent'
-    >;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
     publishedAt: Attribute.DateTime;
@@ -875,6 +880,67 @@ export interface ApiCustomerCustomer extends Schema.CollectionType {
       Attribute.Private;
     updatedBy: Attribute.Relation<
       'api::customer.customer',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+  };
+}
+
+export interface ApiJobJob extends Schema.CollectionType {
+  collectionName: 'jobs';
+  info: {
+    singularName: 'job';
+    pluralName: 'jobs';
+    displayName: 'Job';
+    description: '';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    name: Attribute.String & Attribute.Required;
+    customer: Attribute.Relation<
+      'api::job.job',
+      'oneToOne',
+      'api::customer.customer'
+    >;
+    job_id: Attribute.String & Attribute.Required & Attribute.Unique;
+    createdAt: Attribute.DateTime;
+    updatedAt: Attribute.DateTime;
+    publishedAt: Attribute.DateTime;
+    createdBy: Attribute.Relation<'api::job.job', 'oneToOne', 'admin::user'> &
+      Attribute.Private;
+    updatedBy: Attribute.Relation<'api::job.job', 'oneToOne', 'admin::user'> &
+      Attribute.Private;
+  };
+}
+
+export interface ApiJobRunJobRun extends Schema.CollectionType {
+  collectionName: 'job_runs';
+  info: {
+    singularName: 'job-run';
+    pluralName: 'job-runs';
+    displayName: 'Job run';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    start_time: Attribute.DateTime;
+    end_time: Attribute.DateTime;
+    job: Attribute.Relation<'api::job-run.job-run', 'oneToOne', 'api::job.job'>;
+    createdAt: Attribute.DateTime;
+    updatedAt: Attribute.DateTime;
+    publishedAt: Attribute.DateTime;
+    createdBy: Attribute.Relation<
+      'api::job-run.job-run',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+    updatedBy: Attribute.Relation<
+      'api::job-run.job-run',
       'oneToOne',
       'admin::user'
     > &
@@ -1041,6 +1107,9 @@ export interface ApiProductProduct extends Schema.CollectionType {
       'oneToOne',
       'api::manual.manual'
     >;
+    first_seen: Attribute.DateTime;
+    last_seen: Attribute.DateTime;
+    last_updated: Attribute.DateTime;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
     createdBy: Attribute.Relation<
@@ -1109,6 +1178,8 @@ declare module '@strapi/types' {
       'api::agent.agent': ApiAgentAgent;
       'api::client.client': ApiClientClient;
       'api::customer.customer': ApiCustomerCustomer;
+      'api::job.job': ApiJobJob;
+      'api::job-run.job-run': ApiJobRunJobRun;
       'api::manual.manual': ApiManualManual;
       'api::message.message': ApiMessageMessage;
       'api::model.model': ApiModelModel;

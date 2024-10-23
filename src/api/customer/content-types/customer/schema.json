@@ -14,11 +14,6 @@
   "attributes": {
     "Name": {
       "type": "string"
-    },
-    "agents": {
-      "type": "relation",
-      "relation": "oneToMany",
-      "target": "api::agent.agent"
     }
   }
 }

@@ -1,10 +1,10 @@
 {
   "kind": "collectionType",
-  "collectionName": "agents",
+  "collectionName": "jobs",
   "info": {
-    "singularName": "agent",
-    "pluralName": "agents",
-    "displayName": "Assistant",
+    "singularName": "job",
+    "pluralName": "jobs",
+    "displayName": "Job",
     "description": ""
   },
   "options": {
@@ -14,15 +14,14 @@
   "attributes": {
     "name": {
       "type": "string",
-      "required": true,
-      "unique": true
+      "required": true
     },
     "customer": {
       "type": "relation",
       "relation": "oneToOne",
       "target": "api::customer.customer"
     },
-    "assistant_id": {
+    "job_id": {
       "type": "string",
       "required": true,
       "unique": true

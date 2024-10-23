@@ -32,6 +32,15 @@
       "relation": "oneToOne",
       "target": "api::manual.manual",
       "mappedBy": "product"
+    },
+    "first_seen": {
+      "type": "datetime"
+    },
+    "last_seen": {
+      "type": "datetime"
+    },
+    "last_updated": {
+      "type": "datetime"
     }
   }
 }
