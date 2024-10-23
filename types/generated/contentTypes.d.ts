@@ -962,6 +962,7 @@ export interface ApiManualManual extends Schema.CollectionType {
   attributes: {
     file: Attribute.Media;
     file_id: Attribute.String;
+    file_hash: Attribute.String;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
     publishedAt: Attribute.DateTime;

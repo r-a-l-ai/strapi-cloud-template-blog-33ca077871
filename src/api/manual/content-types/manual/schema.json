@@ -22,6 +22,9 @@
     },
     "file_id": {
       "type": "string"
+    },
+    "file_hash": {
+      "type": "string"
     }
   }
 }
