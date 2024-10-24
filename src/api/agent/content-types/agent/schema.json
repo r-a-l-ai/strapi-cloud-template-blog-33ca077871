@@ -32,6 +32,12 @@
       "relation": "manyToMany",
       "target": "api::vector-store.vector-store",
       "mappedBy": "assistants"
+    },
+    "jobs": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::job.job",
+      "mappedBy": "assistants"
     }
   }
 }

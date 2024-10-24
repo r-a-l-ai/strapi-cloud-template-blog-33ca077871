@@ -811,6 +811,7 @@ export interface ApiAgentAgent extends Schema.CollectionType {
       'manyToMany',
       'api::vector-store.vector-store'
     >;
+    jobs: Attribute.Relation<'api::agent.agent', 'manyToMany', 'api::job.job'>;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
     publishedAt: Attribute.DateTime;
@@ -911,6 +912,11 @@ export interface ApiJobJob extends Schema.CollectionType {
       'api::customer.customer'
     >;
     job_id: Attribute.String & Attribute.Required & Attribute.Unique;
+    assistants: Attribute.Relation<
+      'api::job.job',
+      'manyToMany',
+      'api::agent.agent'
+    >;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
     publishedAt: Attribute.DateTime;

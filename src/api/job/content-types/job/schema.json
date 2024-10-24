@@ -25,6 +25,12 @@
       "type": "string",
       "required": true,
       "unique": true
+    },
+    "assistants": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::agent.agent",
+      "inversedBy": "jobs"
     }
   }
 }
