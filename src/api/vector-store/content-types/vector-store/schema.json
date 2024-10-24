@@ -22,6 +22,12 @@
       "relation": "manyToMany",
       "target": "api::agent.agent",
       "inversedBy": "vector_stores"
+    },
+    "files": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::manual.manual",
+      "mappedBy": "vector_store"
     }
   }
 }

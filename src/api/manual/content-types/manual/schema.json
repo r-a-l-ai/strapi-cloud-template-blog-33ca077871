@@ -25,6 +25,12 @@
     },
     "file_hash": {
       "type": "string"
+    },
+    "vector_store": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::vector-store.vector-store",
+      "inversedBy": "files"
     }
   }
 }

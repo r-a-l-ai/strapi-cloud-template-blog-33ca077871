@@ -968,6 +968,11 @@ export interface ApiManualManual extends Schema.CollectionType {
     file: Attribute.Media;
     file_id: Attribute.String;
     file_hash: Attribute.String;
+    vector_store: Attribute.Relation<
+      'api::manual.manual',
+      'manyToOne',
+      'api::vector-store.vector-store'
+    >;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
     publishedAt: Attribute.DateTime;
@@ -1168,6 +1173,11 @@ export interface ApiVectorStoreVectorStore extends Schema.CollectionType {
       'api::vector-store.vector-store',
       'manyToMany',
       'api::agent.agent'
+    >;
+    files: Attribute.Relation<
+      'api::vector-store.vector-store',
+      'oneToMany',
+      'api::manual.manual'
     >;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
