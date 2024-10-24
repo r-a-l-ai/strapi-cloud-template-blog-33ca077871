@@ -971,7 +971,6 @@ export interface ApiManualManual extends Schema.CollectionType {
     draftAndPublish: true;
   };
   attributes: {
-    file: Attribute.Media;
     file_id: Attribute.String;
     file_hash: Attribute.String;
     vector_store: Attribute.Relation<
@@ -979,6 +978,8 @@ export interface ApiManualManual extends Schema.CollectionType {
       'manyToOne',
       'api::vector-store.vector-store'
     >;
+    openai_file_id: Attribute.String;
+    file_name: Attribute.String;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
     publishedAt: Attribute.DateTime;

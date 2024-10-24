@@ -12,14 +12,6 @@
   },
   "pluginOptions": {},
   "attributes": {
-    "file": {
-      "type": "media",
-      "multiple": false,
-      "required": false,
-      "allowedTypes": [
-        "files"
-      ]
-    },
     "file_id": {
       "type": "string"
     },
@@ -31,6 +23,12 @@
       "relation": "manyToOne",
       "target": "api::vector-store.vector-store",
       "inversedBy": "files"
+    },
+    "openai_file_id": {
+      "type": "string"
+    },
+    "file_name": {
+      "type": "string"
     }
   }
 }
