@@ -26,6 +26,12 @@
       "type": "string",
       "required": true,
       "unique": true
+    },
+    "vector_stores": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::vector-store.vector-store",
+      "mappedBy": "assistants"
     }
   }
 }

@@ -806,6 +806,11 @@ export interface ApiAgentAgent extends Schema.CollectionType {
       'api::customer.customer'
     >;
     assistant_id: Attribute.String & Attribute.Required & Attribute.Unique;
+    vector_stores: Attribute.Relation<
+      'api::agent.agent',
+      'manyToMany',
+      'api::vector-store.vector-store'
+    >;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
     publishedAt: Attribute.DateTime;
@@ -953,7 +958,7 @@ export interface ApiManualManual extends Schema.CollectionType {
   info: {
     singularName: 'manual';
     pluralName: 'manuals';
-    displayName: 'Manual';
+    displayName: 'File';
     description: '';
   };
   options: {
@@ -1099,9 +1104,6 @@ export interface ApiProductProduct extends Schema.CollectionType {
     item_id: Attribute.Integer & Attribute.Required & Attribute.Unique;
     product_name: Attribute.String;
     json_hash: Attribute.String;
-    first_seen: Attribute.DateTime;
-    last_seen: Attribute.DateTime;
-    last_updated: Attribute.DateTime;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
     createdBy: Attribute.Relation<
@@ -1149,6 +1151,42 @@ export interface ApiThreadThread extends Schema.CollectionType {
   };
 }
 
+export interface ApiVectorStoreVectorStore extends Schema.CollectionType {
+  collectionName: 'vector_stores';
+  info: {
+    singularName: 'vector-store';
+    pluralName: 'vector-stores';
+    displayName: 'Vector Store';
+    description: '';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    vector_store_id: Attribute.String & Attribute.Required & Attribute.Unique;
+    assistants: Attribute.Relation<
+      'api::vector-store.vector-store',
+      'manyToMany',
+      'api::agent.agent'
+    >;
+    createdAt: Attribute.DateTime;
+    updatedAt: Attribute.DateTime;
+    publishedAt: Attribute.DateTime;
+    createdBy: Attribute.Relation<
+      'api::vector-store.vector-store',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+    updatedBy: Attribute.Relation<
+      'api::vector-store.vector-store',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+  };
+}
+
 declare module '@strapi/types' {
   export module Shared {
     export interface ContentTypes {
@@ -1177,6 +1215,7 @@ declare module '@strapi/types' {
       'api::model.model': ApiModelModel;
       'api::product.product': ApiProductProduct;
       'api::thread.thread': ApiThreadThread;
+      'api::vector-store.vector-store': ApiVectorStoreVectorStore;
     }
   }
 }

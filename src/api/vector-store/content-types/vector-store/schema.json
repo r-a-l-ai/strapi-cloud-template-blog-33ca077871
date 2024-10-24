@@ -1,0 +1,27 @@
+{
+  "kind": "collectionType",
+  "collectionName": "vector_stores",
+  "info": {
+    "singularName": "vector-store",
+    "pluralName": "vector-stores",
+    "displayName": "Vector Store",
+    "description": ""
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "vector_store_id": {
+      "type": "string",
+      "required": true,
+      "unique": true
+    },
+    "assistants": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::agent.agent",
+      "inversedBy": "vector_stores"
+    }
+  }
+}

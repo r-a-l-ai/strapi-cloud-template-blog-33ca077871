@@ -26,15 +26,6 @@
     },
     "json_hash": {
       "type": "string"
-    },
-    "first_seen": {
-      "type": "datetime"
-    },
-    "last_seen": {
-      "type": "datetime"
-    },
-    "last_updated": {
-      "type": "datetime"
     }
   }
 }
