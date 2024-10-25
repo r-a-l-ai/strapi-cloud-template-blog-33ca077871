@@ -1,0 +1,42 @@
+{
+  "kind": "collectionType",
+  "collectionName": "chatboxes",
+  "info": {
+    "singularName": "chatbox",
+    "pluralName": "chatboxes",
+    "displayName": "Chatbox",
+    "description": ""
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "chatbox_name": {
+      "type": "string",
+      "unique": true,
+      "required": true
+    },
+    "assistant": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "api::agent.agent"
+    },
+    "customer": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "api::customer.customer"
+    },
+    "environment": {
+      "type": "enumeration",
+      "enum": [
+        "Production",
+        "Testing",
+        "Development"
+      ]
+    },
+    "url": {
+      "type": "string"
+    }
+  }
+}

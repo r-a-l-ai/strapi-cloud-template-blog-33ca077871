@@ -765,9 +765,9 @@ export interface PluginUsersPermissionsUser extends Schema.CollectionType {
       'manyToOne',
       'plugin::users-permissions.role'
     >;
-    customer: Attribute.Relation<
+    customers: Attribute.Relation<
       'plugin::users-permissions.user',
-      'oneToOne',
+      'oneToMany',
       'api::customer.customer'
     >;
     createdAt: Attribute.DateTime;
@@ -812,6 +812,11 @@ export interface ApiAgentAgent extends Schema.CollectionType {
       'api::vector-store.vector-store'
     >;
     jobs: Attribute.Relation<'api::agent.agent', 'manyToMany', 'api::job.job'>;
+    thread: Attribute.Relation<
+      'api::agent.agent',
+      'oneToOne',
+      'api::thread.thread'
+    >;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
     publishedAt: Attribute.DateTime;
@@ -823,6 +828,51 @@ export interface ApiAgentAgent extends Schema.CollectionType {
       Attribute.Private;
     updatedBy: Attribute.Relation<
       'api::agent.agent',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+  };
+}
+
+export interface ApiChatboxChatbox extends Schema.CollectionType {
+  collectionName: 'chatboxes';
+  info: {
+    singularName: 'chatbox';
+    pluralName: 'chatboxes';
+    displayName: 'Chatbox';
+    description: '';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    chatbox_name: Attribute.String & Attribute.Required & Attribute.Unique;
+    assistant: Attribute.Relation<
+      'api::chatbox.chatbox',
+      'oneToOne',
+      'api::agent.agent'
+    >;
+    customer: Attribute.Relation<
+      'api::chatbox.chatbox',
+      'oneToOne',
+      'api::customer.customer'
+    >;
+    environment: Attribute.Enumeration<
+      ['Production', 'Testing', 'Development']
+    >;
+    url: Attribute.String;
+    createdAt: Attribute.DateTime;
+    updatedAt: Attribute.DateTime;
+    publishedAt: Attribute.DateTime;
+    createdBy: Attribute.Relation<
+      'api::chatbox.chatbox',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+    updatedBy: Attribute.Relation<
+      'api::chatbox.chatbox',
       'oneToOne',
       'admin::user'
     > &
@@ -845,6 +895,11 @@ export interface ApiClientClient extends Schema.CollectionType {
     client_id: Attribute.String;
     first_seen: Attribute.DateTime;
     last_seen: Attribute.DateTime;
+    thread: Attribute.Relation<
+      'api::client.client',
+      'oneToOne',
+      'api::thread.thread'
+    >;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
     createdBy: Attribute.Relation<
@@ -874,7 +929,17 @@ export interface ApiCustomerCustomer extends Schema.CollectionType {
     draftAndPublish: true;
   };
   attributes: {
-    Name: Attribute.String;
+    customer_name: Attribute.String & Attribute.Required & Attribute.Unique;
+    admin_users: Attribute.Relation<
+      'api::customer.customer',
+      'oneToMany',
+      'admin::user'
+    >;
+    users_permissions_user: Attribute.Relation<
+      'api::customer.customer',
+      'oneToOne',
+      'plugin::users-permissions.user'
+    >;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
     publishedAt: Attribute.DateTime;
@@ -1139,12 +1204,28 @@ export interface ApiThreadThread extends Schema.CollectionType {
     singularName: 'thread';
     pluralName: 'threads';
     displayName: 'Thread';
+    description: '';
   };
   options: {
     draftAndPublish: true;
   };
   attributes: {
     thread_id: Attribute.String & Attribute.Required & Attribute.Unique;
+    messages: Attribute.Relation<
+      'api::thread.thread',
+      'oneToMany',
+      'api::message.message'
+    >;
+    assistant: Attribute.Relation<
+      'api::thread.thread',
+      'oneToOne',
+      'api::agent.agent'
+    >;
+    client: Attribute.Relation<
+      'api::thread.thread',
+      'oneToOne',
+      'api::client.client'
+    >;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
     publishedAt: Attribute.DateTime;
@@ -1223,6 +1304,7 @@ declare module '@strapi/types' {
       'plugin::users-permissions.role': PluginUsersPermissionsRole;
       'plugin::users-permissions.user': PluginUsersPermissionsUser;
       'api::agent.agent': ApiAgentAgent;
+      'api::chatbox.chatbox': ApiChatboxChatbox;
       'api::client.client': ApiClientClient;
       'api::customer.customer': ApiCustomerCustomer;
       'api::job.job': ApiJobJob;

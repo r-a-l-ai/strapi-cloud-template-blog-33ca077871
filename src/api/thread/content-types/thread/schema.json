@@ -4,7 +4,8 @@
   "info": {
     "singularName": "thread",
     "pluralName": "threads",
-    "displayName": "Thread"
+    "displayName": "Thread",
+    "description": ""
   },
   "options": {
     "draftAndPublish": true
@@ -15,6 +16,23 @@
       "type": "string",
       "unique": true,
       "required": true
+    },
+    "messages": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::message.message"
+    },
+    "assistant": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "api::agent.agent",
+      "inversedBy": "thread"
+    },
+    "client": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "api::client.client",
+      "inversedBy": "thread"
     }
   }
 }

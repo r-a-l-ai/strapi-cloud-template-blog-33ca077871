@@ -38,6 +38,12 @@
       "relation": "manyToMany",
       "target": "api::job.job",
       "mappedBy": "assistants"
+    },
+    "thread": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "api::thread.thread",
+      "mappedBy": "assistant"
     }
   }
 }

@@ -65,9 +65,9 @@
       "inversedBy": "users",
       "configurable": false
     },
-    "customer": {
+    "customers": {
       "type": "relation",
-      "relation": "oneToOne",
+      "relation": "oneToMany",
       "target": "api::customer.customer"
     }
   }

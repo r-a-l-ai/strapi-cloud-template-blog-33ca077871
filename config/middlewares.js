@@ -9,10 +9,4 @@ module.exports = [
   'strapi::session',
   'strapi::favicon',
   'strapi::public',
-  // {
-  //   name: 'global::mindsdb',
-  // },
-  {
-    name: 'global::autogen',
-  },
 ];

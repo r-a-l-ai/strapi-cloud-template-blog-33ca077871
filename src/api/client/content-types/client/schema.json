@@ -20,6 +20,12 @@
     },
     "last_seen": {
       "type": "datetime"
+    },
+    "thread": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "api::thread.thread",
+      "mappedBy": "client"
     }
   }
 }
