@@ -14,7 +14,7 @@
       "name": "Apache 2.0",
       "url": "https://www.apache.org/licenses/LICENSE-2.0.html"
     },
-    "x-generation-date": "2024-10-25T21:28:55.424Z"
+    "x-generation-date": "2024-11-20T21:25:12.767Z"
   },
   "x-strapi-config": {
     "path": "/documentation",
@@ -1117,6 +1117,9 @@
                                                                                   }
                                                                                 }
                                                                               }
+                                                                            },
+                                                                            "garni_cookie_value": {
+                                                                              "type": "string"
                                                                             },
                                                                             "createdAt": {
                                                                               "type": "string",
@@ -2748,6 +2751,9 @@
                                                                 }
                                                               }
                                                             },
+                                                            "garni_cookie_value": {
+                                                              "type": "string"
+                                                            },
                                                             "createdAt": {
                                                               "type": "string",
                                                               "format": "date-time"
@@ -3112,6 +3118,9 @@
                   }
                 ],
                 "example": "string or id"
+              },
+              "garni_cookie_value": {
+                "type": "string"
               }
             }
           }
@@ -3279,6 +3288,9 @@
                                                       }
                                                     }
                                                   }
+                                                },
+                                                "garni_cookie_value": {
+                                                  "type": "string"
                                                 },
                                                 "createdAt": {
                                                   "type": "string",
@@ -4442,6 +4454,9 @@
                 }
               }
             }
+          },
+          "garni_cookie_value": {
+            "type": "string"
           },
           "createdAt": {
             "type": "string",
@@ -6467,6 +6482,9 @@
                                                                   }
                                                                 }
                                                               },
+                                                              "garni_cookie_value": {
+                                                                "type": "string"
+                                                              },
                                                               "createdAt": {
                                                                 "type": "string",
                                                                 "format": "date-time"
@@ -7840,6 +7858,9 @@
                                                                               }
                                                                             }
                                                                           },
+                                                                          "garni_cookie_value": {
+                                                                            "type": "string"
+                                                                          },
                                                                           "createdAt": {
                                                                             "type": "string",
                                                                             "format": "date-time"
@@ -9171,6 +9192,9 @@
                                                                               }
                                                                             }
                                                                           },
+                                                                          "garni_cookie_value": {
+                                                                            "type": "string"
+                                                                          },
                                                                           "createdAt": {
                                                                             "type": "string",
                                                                             "format": "date-time"
@@ -9842,6 +9866,9 @@
                                                       }
                                                     }
                                                   }
+                                                },
+                                                "garni_cookie_value": {
+                                                  "type": "string"
                                                 },
                                                 "createdAt": {
                                                   "type": "string",
@@ -13498,6 +13525,9 @@
                                                     }
                                                   }
                                                 },
+                                                "garni_cookie_value": {
+                                                  "type": "string"
+                                                },
                                                 "createdAt": {
                                                   "type": "string",
                                                   "format": "date-time"
@@ -14913,6 +14943,9 @@
                                                                     }
                                                                   }
                                                                 }
+                                                              },
+                                                              "garni_cookie_value": {
+                                                                "type": "string"
                                                               },
                                                               "createdAt": {
                                                                 "type": "string",

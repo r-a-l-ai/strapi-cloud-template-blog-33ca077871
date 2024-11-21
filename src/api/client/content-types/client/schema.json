@@ -26,6 +26,9 @@
       "relation": "oneToOne",
       "target": "api::thread.thread",
       "mappedBy": "client"
+    },
+    "garni_cookie_value": {
+      "type": "string"
     }
   }
 }

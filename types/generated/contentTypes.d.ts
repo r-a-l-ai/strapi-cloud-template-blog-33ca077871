@@ -900,6 +900,7 @@ export interface ApiClientClient extends Schema.CollectionType {
       'oneToOne',
       'api::thread.thread'
     >;
+    garni_cookie_value: Attribute.String;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
     createdBy: Attribute.Relation<
