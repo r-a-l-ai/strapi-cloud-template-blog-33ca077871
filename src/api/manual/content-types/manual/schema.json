@@ -29,6 +29,14 @@
     },
     "file_name": {
       "type": "string"
+    },
+    "job_run": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "api::job-run.job-run"
+    },
+    "content": {
+      "type": "text"
     }
   }
 }

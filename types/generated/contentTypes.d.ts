@@ -1046,6 +1046,12 @@ export interface ApiManualManual extends Schema.CollectionType {
     >;
     openai_file_id: Attribute.String;
     file_name: Attribute.String;
+    job_run: Attribute.Relation<
+      'api::manual.manual',
+      'oneToOne',
+      'api::job-run.job-run'
+    >;
+    content: Attribute.Text;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
     publishedAt: Attribute.DateTime;
