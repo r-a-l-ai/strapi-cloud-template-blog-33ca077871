@@ -796,7 +796,7 @@ export interface ApiAgentAgent extends Schema.CollectionType {
     description: '';
   };
   options: {
-    draftAndPublish: true;
+    draftAndPublish: false;
   };
   attributes: {
     name: Attribute.String & Attribute.Required & Attribute.Unique;
@@ -812,14 +812,13 @@ export interface ApiAgentAgent extends Schema.CollectionType {
       'api::vector-store.vector-store'
     >;
     jobs: Attribute.Relation<'api::agent.agent', 'manyToMany', 'api::job.job'>;
-    thread: Attribute.Relation<
+    threads: Attribute.Relation<
       'api::agent.agent',
-      'oneToOne',
+      'oneToMany',
       'api::thread.thread'
     >;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
-    publishedAt: Attribute.DateTime;
     createdBy: Attribute.Relation<
       'api::agent.agent',
       'oneToOne',
@@ -901,6 +900,8 @@ export interface ApiClientClient extends Schema.CollectionType {
       'api::thread.thread'
     >;
     garni_cookie_value: Attribute.String;
+    user_agent: Attribute.String;
+    ip_address: Attribute.String;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
     createdBy: Attribute.Relation<
@@ -1084,11 +1085,6 @@ export interface ApiMessageMessage extends Schema.CollectionType {
   attributes: {
     content: Attribute.Text;
     message_id: Attribute.String;
-    thread_id: Attribute.Relation<
-      'api::message.message',
-      'oneToOne',
-      'api::thread.thread'
-    >;
     role: Attribute.Enumeration<['user', 'assistant']>;
     timestamp: Attribute.DateTime;
     client_id: Attribute.Relation<
@@ -1097,6 +1093,11 @@ export interface ApiMessageMessage extends Schema.CollectionType {
       'api::client.client'
     >;
     additional_data: Attribute.JSON;
+    thread: Attribute.Relation<
+      'api::message.message',
+      'manyToOne',
+      'api::thread.thread'
+    >;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
     createdBy: Attribute.Relation<
@@ -1218,14 +1219,9 @@ export interface ApiThreadThread extends Schema.CollectionType {
   };
   attributes: {
     thread_id: Attribute.String & Attribute.Required & Attribute.Unique;
-    messages: Attribute.Relation<
-      'api::thread.thread',
-      'oneToMany',
-      'api::message.message'
-    >;
     assistant: Attribute.Relation<
       'api::thread.thread',
-      'oneToOne',
+      'manyToOne',
       'api::agent.agent'
     >;
     client: Attribute.Relation<
@@ -1233,6 +1229,14 @@ export interface ApiThreadThread extends Schema.CollectionType {
       'oneToOne',
       'api::client.client'
     >;
+    evaluation_detail: Attribute.JSON;
+    client_satisfied: Attribute.Boolean;
+    messages: Attribute.Relation<
+      'api::thread.thread',
+      'oneToMany',
+      'api::message.message'
+    >;
+    timestamp: Attribute.DateTime;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
     publishedAt: Attribute.DateTime;

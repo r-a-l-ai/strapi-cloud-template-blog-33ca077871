@@ -17,22 +17,32 @@
       "unique": true,
       "required": true
     },
-    "messages": {
-      "type": "relation",
-      "relation": "oneToMany",
-      "target": "api::message.message"
-    },
     "assistant": {
       "type": "relation",
-      "relation": "oneToOne",
+      "relation": "manyToOne",
       "target": "api::agent.agent",
-      "inversedBy": "thread"
+      "inversedBy": "threads"
     },
     "client": {
       "type": "relation",
       "relation": "oneToOne",
       "target": "api::client.client",
       "inversedBy": "thread"
+    },
+    "evaluation_detail": {
+      "type": "json"
+    },
+    "client_satisfied": {
+      "type": "boolean"
+    },
+    "messages": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::message.message",
+      "mappedBy": "thread"
+    },
+    "timestamp": {
+      "type": "datetime"
     }
   }
 }

@@ -8,7 +8,7 @@
     "description": ""
   },
   "options": {
-    "draftAndPublish": true
+    "draftAndPublish": false
   },
   "pluginOptions": {},
   "attributes": {
@@ -39,9 +39,9 @@
       "target": "api::job.job",
       "mappedBy": "assistants"
     },
-    "thread": {
+    "threads": {
       "type": "relation",
-      "relation": "oneToOne",
+      "relation": "oneToMany",
       "target": "api::thread.thread",
       "mappedBy": "assistant"
     }

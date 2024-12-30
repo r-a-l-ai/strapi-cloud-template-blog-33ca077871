@@ -29,6 +29,12 @@
     },
     "garni_cookie_value": {
       "type": "string"
+    },
+    "user_agent": {
+      "type": "string"
+    },
+    "ip_address": {
+      "type": "string"
     }
   }
 }

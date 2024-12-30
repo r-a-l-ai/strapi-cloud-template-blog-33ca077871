@@ -11,7 +11,8 @@ RUN npm config set fetch-retry-maxtimeout 600000 -g && npm install
 ENV PATH=/opt/node_modules/.bin:$PATH
 
 WORKDIR /opt/app
-COPY . .
+COPY . /opt/app
+RUN rm -rf /opt/app/tools
 RUN chown -R node:node /opt/app
 USER node
 RUN ["npm", "run", "build"]

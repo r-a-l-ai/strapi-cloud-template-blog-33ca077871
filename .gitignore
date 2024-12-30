@@ -113,3 +113,5 @@ dist
 build
 .strapi-updater.json
 /.vs
+tools/thread_ids
+tools/localenv
