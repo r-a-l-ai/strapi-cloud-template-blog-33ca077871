@@ -760,7 +760,7 @@ export interface ApiThreadThread extends Struct.CollectionTypeSchema {
       Schema.Attribute.Private;
     messages: Schema.Attribute.Relation<'oneToMany', 'api::message.message'>;
     publishedAt: Schema.Attribute.DateTime;
-    reviewed: Schema.Attribute.Boolean;
+    reviewed: Schema.Attribute.Boolean & Schema.Attribute.DefaultTo<false>;
     thread_id: Schema.Attribute.String &
       Schema.Attribute.Required &
       Schema.Attribute.Unique;
