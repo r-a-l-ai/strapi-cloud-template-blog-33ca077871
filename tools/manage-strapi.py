@@ -5,9 +5,7 @@ import logging
 import argparse
 import json
 import threading
-
 from datetime import datetime
-
 
 # Set up logging
 log_level = os.getenv('LOG_LEVEL', 'warning').upper()
@@ -23,8 +21,21 @@ openai.api_key = api_key
 # Initialize client
 client = openai.OpenAI(api_key=api_key)
 
-# Centralized Strapi URL
+# Centralized Strapi URL and token
 STRAPI_BASE_URL = os.getenv('STRAPI_BASE_URL', "http://localhost:1337/api")
+STRAPI_API_TOKEN = os.getenv('STRAPI_API_TOKEN')
+if not STRAPI_API_TOKEN:
+    raise ValueError("STRAPI_API_TOKEN not found in environment variables.")
+
+# Format token for authorization header
+if STRAPI_API_TOKEN.lower().startswith('bearer '):
+    STRAPI_API_TOKEN = STRAPI_API_TOKEN[7:]  # Remove existing Bearer prefix
+STRAPI_API_TOKEN = f'Bearer {STRAPI_API_TOKEN}'
+
+if logger.isEnabledFor(logging.DEBUG):
+    logger.debug(f"Using Strapi URL: {STRAPI_BASE_URL}")
+    # Don't log the full token in production
+    logger.debug(f"Using Strapi token: {STRAPI_API_TOKEN[:20]}...")
 
 # Function to get all messages from a thread
 def get_all_messages(thread_id):
@@ -48,19 +59,36 @@ def get_all_messages(thread_id):
 
 # Function to find Strapi ID of agent
 def find_strapi_agent_id(agent_id):
-    url = f"{STRAPI_BASE_URL}/agents"  # Example Strapi endpoint for agents
+    url = f"{STRAPI_BASE_URL}/agents?populate=*"  # Include all relations
     headers = {
         "Content-Type": "application/json",
-        "Authorization": f"Bearer {os.getenv('STRAPI_API_TOKEN')}"  # Read from STRAPI_API_TOKEN
+        "Authorization": STRAPI_API_TOKEN
     }
+    
+    if logger.isEnabledFor(logging.DEBUG):
+        logger.debug(f"Request headers: {headers}")
+        logger.debug(f"Request URL: {url}")
     
     response = requests.get(url, headers=headers)
     if response.status_code == 200:
-        agents = response.json().get('data', [])
+        response_data = response.json()
+        if logger.isEnabledFor(logging.DEBUG):
+            logger.debug(f"Response from Strapi: {json.dumps(response_data, indent=2)}")
+        
+        agents = response_data.get('data', [])
         for agent in agents:
-            if agent['attributes']['assistant_id'] == agent_id:
-                return agent['id']
+            try:
+                if agent['assistant_id'] == agent_id:
+                    return agent['id']
+            except (KeyError, TypeError) as e:
+                logger.warning(f"Error processing agent data: {e}")
+                continue
+        
+        logger.error(f"No agent found with assistant_id {agent_id}")
+        return None
+    
     logger.error(f"Failed to find Strapi ID for agent {agent_id}: {response.text}")
+    logger.error(f"Response status code: {response.status_code}")
     return None
 
 # Function to send client ID to Strapi and get Strapi client ID
@@ -68,7 +96,7 @@ def send_client_to_strapi(client_id):
     url = f"{STRAPI_BASE_URL}/clients"  # Example Strapi endpoint for clients
     headers = {
         "Content-Type": "application/json",
-        "Authorization": f"Bearer {os.getenv('STRAPI_API_TOKEN')}"  # Read from STRAPI_API_TOKEN
+        "Authorization": STRAPI_API_TOKEN
     }
     
     data = {
@@ -79,9 +107,17 @@ def send_client_to_strapi(client_id):
     if logger.isEnabledFor(logging.DEBUG):
         logger.debug(f"Sending request to {url} with payload: {data}")
     response = requests.post(url, json=data, headers=headers)
-    if response.status_code == 200:
+    if logger.isEnabledFor(logging.DEBUG):
+        logger.debug(f"Raw request: POST {url} with payload: {json.dumps(data, indent=2)}")
+    if response.status_code in [200, 201]:
+        response_data = response.json()
+        if logger.isEnabledFor(logging.DEBUG):
+            logger.debug(f"Response from Strapi: {json.dumps(response_data, indent=2)}")
         logger.info(f"Successfully sent client {client_id} to Strapi")
-        return response.json().get('data', {}).get('id')
+        return response_data.get('data', {}).get('id')
+    elif response.status_code == 204:
+        logger.info(f"Client {client_id} already exists in Strapi")
+        return None
     else:
         logger.error(f"Failed to send client {client_id} to Strapi: {response.text}")
         return None
@@ -91,7 +127,7 @@ def send_thread_to_strapi(thread_id, strapi_client_id, strapi_agent_id):
     url = f"{STRAPI_BASE_URL}/threads"  # Example Strapi endpoint for threads
     headers = {
         "Content-Type": "application/json",
-        "Authorization": f"Bearer {os.getenv('STRAPI_API_TOKEN')}"  # Read from STRAPI_API_TOKEN
+        "Authorization": STRAPI_API_TOKEN
     }
     
     thread = client.beta.threads.retrieve(thread_id=thread_id)
@@ -108,9 +144,17 @@ def send_thread_to_strapi(thread_id, strapi_client_id, strapi_agent_id):
     if logger.isEnabledFor(logging.DEBUG):
         logger.debug(f"Sending request to {url} with payload: {data}")
     response = requests.post(url, json=data, headers=headers)
-    if response.status_code == 200:
+    if logger.isEnabledFor(logging.DEBUG):
+        logger.debug(f"Raw request: POST {url} with payload: {json.dumps(data, indent=2)}")
+    if response.status_code in [200, 201]:
+        response_data = response.json()
+        if logger.isEnabledFor(logging.DEBUG):
+            logger.debug(f"Response from Strapi: {json.dumps(response_data, indent=2)}")
         logger.info(f"Successfully sent thread {thread_id} to Strapi")
-        return response.json().get('data', {}).get('id')
+        return response_data.get('data', {}).get('id')
+    elif response.status_code == 204:
+        logger.info(f"Thread {thread_id} already exists in Strapi")
+        return None
     else:
         logger.error(f"Failed to send thread {thread_id} to Strapi: {response.text}")
         return None
@@ -120,7 +164,7 @@ def send_messages_to_strapi(strapi_thread_id, messages, strapi_agent_id, strapi_
     url = f"{STRAPI_BASE_URL}/messages"
     headers = {
         "Content-Type": "application/json",
-        "Authorization": f"Bearer {os.getenv('STRAPI_API_TOKEN')}"
+        "Authorization": STRAPI_API_TOKEN
     }
     
     for message in messages:
@@ -138,9 +182,7 @@ def send_messages_to_strapi(strapi_thread_id, messages, strapi_agent_id, strapi_
                 "thread": int(strapi_thread_id),
                 "client_id": int(strapi_client_id),
                 "message_id": message.id,
-                "assistant_id": strapi_agent_id,
                 "content": content,
-                "created_at": message.created_at,
                 "role": message.role,
                 "timestamp": timestamp
             }
@@ -150,31 +192,38 @@ def send_messages_to_strapi(strapi_thread_id, messages, strapi_agent_id, strapi_
             logger.debug(f"Sending request to {url} with payload: {data}")
         
         response = requests.post(url, json=data, headers=headers)
-        if response.status_code == 200:
+        if logger.isEnabledFor(logging.DEBUG):
+            logger.debug(f"Raw request: POST {url} with payload: {json.dumps(data, indent=2)}")
+        if response.status_code in [200, 201]:
             logger.info(f"Successfully sent message {message.id} to Strapi")
         else:
             logger.error(f"Failed to send message {message.id} to Strapi: {response.text}, Payload: {data}")
+            if response.status_code == 400:
+                logger.error("Validation error - please check the field names and types")
 
 
 def delete_all_threads():
     url = f"{STRAPI_BASE_URL}/threads"
     headers = {
         "Content-Type": "application/json",
-        "Authorization": f"Bearer {os.getenv('STRAPI_API_TOKEN')}"
+        "Authorization": STRAPI_API_TOKEN
     }
 
     def delete_thread(thread_id):
         delete_url = f"{url}/{thread_id}"
+        if logger.isEnabledFor(logging.DEBUG):
+            logger.debug(f"Raw request: DELETE {delete_url}")
         delete_response = requests.delete(delete_url, headers=headers)
-        if delete_response.status_code == 200:
+        if delete_response.status_code in [200, 204]:  # Accept both 200 and 204 as success
             logger.info(f"Successfully deleted thread {thread_id} from Strapi")
         else:
-            logger.error(f"Failed to delete thread {thread_id} from Strapi: {delete_response.text}")
+            logger.error(f"Failed to delete thread {thread_id} from Strapi: {delete_response.status_code}")
 
     while True:
         response = requests.get(url, headers=headers)
         if response.status_code == 200:
             threads = response.json().get('data', [])
+            logger.info(f"Found {len(threads)} threads to delete")
             if not threads:
                 break
             threads_to_delete = []
@@ -186,7 +235,8 @@ def delete_all_threads():
             for thread in threads_to_delete:
                 thread.join()
         else:
-            logger.error(f"Failed to retrieve threads from Strapi: {response.text}")
+            logger.error(f"Failed to retrieve threads from Strapi: Status {response.status_code}")
+            logger.debug(f"Response content: {response.text}")
             break
 
 # Function to delete all clients from Strapi
@@ -194,16 +244,18 @@ def delete_all_clients():
     url = f"{STRAPI_BASE_URL}/clients"
     headers = {
         "Content-Type": "application/json",
-        "Authorization": f"Bearer {os.getenv('STRAPI_API_TOKEN')}"
+        "Authorization": STRAPI_API_TOKEN
     }
 
     def delete_client(client_id):
         delete_url = f"{url}/{client_id}"
+        if logger.isEnabledFor(logging.DEBUG):
+            logger.debug(f"Raw request: DELETE {delete_url}")
         delete_response = requests.delete(delete_url, headers=headers)
-        if delete_response.status_code == 200:
+        if delete_response.status_code in [200, 204]:  # Accept both 200 and 204 as success
             logger.info(f"Successfully deleted client {client_id} from Strapi")
         else:
-            logger.error(f"Failed to delete client {client_id} from Strapi: {delete_response.text}")
+            logger.error(f"Failed to delete client {client_id} from Strapi: {delete_response.status_code}")
 
     while True:
         response = requests.get(url, headers=headers)
@@ -216,6 +268,13 @@ def delete_all_clients():
                 client_id = client['id']
                 thread = threading.Thread(target=delete_client, args=(client_id,))
                 clients_to_delete.append(thread)
+                if len(clients_to_delete) == 12:
+                    for thread in clients_to_delete:
+                        thread.start()
+                    for thread in clients_to_delete:
+                        thread.join()
+                    clients_to_delete = []
+            for thread in clients_to_delete:
                 thread.start()
             for thread in clients_to_delete:
                 thread.join()
@@ -228,16 +287,18 @@ def delete_all_messages():
     url = f"{STRAPI_BASE_URL}/messages"
     headers = {
         "Content-Type": "application/json",
-        "Authorization": f"Bearer {os.getenv('STRAPI_API_TOKEN')}"
+        "Authorization": STRAPI_API_TOKEN
     }
 
     def delete_message(message_id):
         delete_url = f"{url}/{message_id}"
+        if logger.isEnabledFor(logging.DEBUG):
+            logger.debug(f"Raw request: DELETE {delete_url}")
         delete_response = requests.delete(delete_url, headers=headers)
-        if delete_response.status_code == 200:
+        if delete_response.status_code in [200, 204]:  # Accept both 200 and 204 as success
             logger.info(f"Successfully deleted message {message_id} from Strapi")
         else:
-            logger.error(f"Failed to delete message {message_id} from Strapi: {delete_response.text}")
+            logger.error(f"Failed to delete message {message_id} from Strapi: {delete_response.status_code}")
 
     while True:
         response = requests.get(url, headers=headers)
@@ -250,6 +311,13 @@ def delete_all_messages():
                 message_id = message['id']
                 thread = threading.Thread(target=delete_message, args=(message_id,))
                 messages_to_delete.append(thread)
+                if len(messages_to_delete) == 12:
+                    for thread in messages_to_delete:
+                        thread.start()
+                    for thread in messages_to_delete:
+                        thread.join()
+                    messages_to_delete = []
+            for thread in messages_to_delete:
                 thread.start()
             for thread in messages_to_delete:
                 thread.join()
@@ -308,6 +376,13 @@ def main():
             for thread_id, client_id in thread_client_pairs:
                 thread = threading.Thread(target=import_thread_and_client, args=(thread_id, client_id, strapi_agent_id))
                 threads.append(thread)
+                if len(threads) == 12:
+                    for thread in threads:
+                        thread.start()
+                    for thread in threads:
+                        thread.join()
+                    threads = []
+            for thread in threads:
                 thread.start()
             for thread in threads:
                 thread.join()

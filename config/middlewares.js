@@ -1,7 +1,14 @@
 module.exports = [
   'strapi::logger',
   'strapi::errors',
-  'strapi::security',
+  {
+    name: 'strapi::security',
+    config: {
+      rateLimit: {
+        enabled: false
+      }
+    }
+  },
   'strapi::cors',
   'strapi::poweredBy',
   'strapi::query',

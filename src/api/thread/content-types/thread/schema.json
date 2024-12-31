@@ -43,6 +43,9 @@
     },
     "timestamp": {
       "type": "datetime"
+    },
+    "reviewed": {
+      "type": "boolean"
     }
   }
 }
