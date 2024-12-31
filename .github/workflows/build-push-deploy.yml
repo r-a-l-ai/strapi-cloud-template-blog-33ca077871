@@ -39,4 +39,4 @@ jobs:
     steps:
     - name: Deploy to server
       run: |
-        curl -k -X POST "https://portainer.platform.horizonfinder.cz/api/stacks/webhooks/7b9a253e-ff93-40e7-b231-80c0ed6cce19?IMAGE_VERSION=${{ github.ref_name }}"
+        curl -k -X POST "https://portainer.platform.horizonfinder.cz/api/stacks/webhooks/40e8b3a0-c8b7-4d90-b477-0f7371d5237e?IMAGE_VERSION=${{ github.ref_name }}"
