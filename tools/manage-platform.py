@@ -5,6 +5,7 @@ import logging
 import argparse
 import json
 import threading
+import redis
 from datetime import datetime
 
 # Set up logging
@@ -348,18 +349,57 @@ def get_thread_raw(thread_id):
     else:
         logger.error(f"Failed to retrieve messages for thread {thread_id} from OpenAI")
 
+def scan_redis(host, port, include_client=False):
+    """Scan Redis for thread IDs and optionally client IDs"""
+    try:
+        r = redis.Redis(host=host, port=port, db=0)
+        cursor = 0
+        pattern = 'client:*:thread_id'
+
+        while True:
+            cursor, keys = r.scan(cursor=cursor, match=pattern, count=1000)
+            
+            if keys:
+                values = r.mget(keys)
+                for k, v in zip(keys, values):
+                    if v:
+                        thread_id = v.decode('utf-8')
+                        if include_client:
+                            client_id_key = f"thread:{thread_id}:client_id"
+                            client_id = r.get(client_id_key)
+                            if client_id:
+                                print(thread_id, client_id.decode('utf-8'))
+                        else:
+                            print(thread_id)
+
+            if cursor == 0:
+                break
+                
+    except redis.ConnectionError as e:
+        logger.error(f"Failed to connect to Redis at {host}:{port}: {e}")
+    except Exception as e:
+        logger.error(f"Error scanning Redis: {e}")
+
 # Main function to handle command line arguments
 def main():
     parser = argparse.ArgumentParser(description="Manage Strapi data")
-    parser.add_argument("command", choices=["import", "delete-threads", "delete-clients", "delete-messages", "delete-all", "get-thread-raw"], help="Command to execute")
+    parser.add_argument("command", choices=["import", "delete-threads", "delete-clients", 
+                                          "delete-messages", "delete-all", "get-thread-raw",
+                                          "redis-scan"], help="Command to execute")
     parser.add_argument("-f", "--file", help="Thread client file for import command")
     parser.add_argument("-a", "--assistant", help="Assistant ID for import command")
     parser.add_argument("-c", "--count", type=int, help="Limit the number of imported rows")
     parser.add_argument("-t", "--thread", help="OpenAI thread ID for get-thread-raw command")
+    # Add new arguments for redis-scan
+    parser.add_argument("--client", action="store_true", help="Include client IDs in redis-scan output")
+    parser.add_argument("--redis-host", default="localhost", help="Redis host (default: localhost)")
+    parser.add_argument("--redis-port", type=int, default=6379, help="Redis port (default: 6379)")
 
     args = parser.parse_args()
 
-    if args.command == "import":
+    if args.command == "redis-scan":
+        scan_redis(args.redis_host, args.redis_port, args.client)
+    elif args.command == "import":
         if not args.file:
             parser.error("The import command requires the -f/--file argument")
         if not args.assistant:

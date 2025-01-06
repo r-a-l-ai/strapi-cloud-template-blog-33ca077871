@@ -116,3 +116,5 @@ build
 tools/thread_ids
 tools/localenv
 tools/prodimport
+tools/thread_client_ids*
+tools/thread_*.json
