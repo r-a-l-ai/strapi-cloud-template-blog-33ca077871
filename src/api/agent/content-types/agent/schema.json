@@ -44,6 +44,11 @@
       "relation": "oneToMany",
       "target": "api::thread.thread",
       "mappedBy": "assistant"
+    },
+    "api_key": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "api::api-key.api-key"
     }
   }
 }

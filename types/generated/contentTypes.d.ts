@@ -381,6 +381,7 @@ export interface ApiAgentAgent extends Struct.CollectionTypeSchema {
     draftAndPublish: false;
   };
   attributes: {
+    api_key: Schema.Attribute.Relation<'oneToOne', 'api::api-key.api-key'>;
     assistant_id: Schema.Attribute.String &
       Schema.Attribute.Required &
       Schema.Attribute.Unique;
@@ -404,6 +405,40 @@ export interface ApiAgentAgent extends Struct.CollectionTypeSchema {
       'manyToMany',
       'api::vector-store.vector-store'
     >;
+  };
+}
+
+export interface ApiApiKeyApiKey extends Struct.CollectionTypeSchema {
+  collectionName: 'api_keys';
+  info: {
+    description: '';
+    displayName: 'API key';
+    pluralName: 'api-keys';
+    singularName: 'api-key';
+  };
+  options: {
+    draftAndPublish: false;
+  };
+  attributes: {
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    description: Schema.Attribute.Text;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::api-key.api-key'
+    > &
+      Schema.Attribute.Private;
+    name: Schema.Attribute.String &
+      Schema.Attribute.Required &
+      Schema.Attribute.Unique;
+    publishedAt: Schema.Attribute.DateTime;
+    type: Schema.Attribute.Enumeration<['openai']> & Schema.Attribute.Required;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    value_b64: Schema.Attribute.Text & Schema.Attribute.Required;
   };
 }
 
@@ -488,7 +523,7 @@ export interface ApiCustomerCustomer extends Struct.CollectionTypeSchema {
     singularName: 'customer';
   };
   options: {
-    draftAndPublish: true;
+    draftAndPublish: false;
   };
   attributes: {
     admin_users: Schema.Attribute.Relation<'oneToMany', 'admin::user'>;
@@ -515,30 +550,78 @@ export interface ApiCustomerCustomer extends Struct.CollectionTypeSchema {
   };
 }
 
-export interface ApiJobRunJobRun extends Struct.CollectionTypeSchema {
-  collectionName: 'job_runs';
+export interface ApiJobConfigurationJobConfiguration
+  extends Struct.CollectionTypeSchema {
+  collectionName: 'job_configurations';
   info: {
-    displayName: 'Job run';
-    pluralName: 'job-runs';
-    singularName: 'job-run';
+    displayName: 'Job configuration';
+    pluralName: 'job-configurations';
+    singularName: 'job-configuration';
   };
   options: {
-    draftAndPublish: true;
+    draftAndPublish: false;
   };
   attributes: {
     createdAt: Schema.Attribute.DateTime;
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
-    end_time: Schema.Attribute.DateTime;
-    job: Schema.Attribute.Relation<'oneToOne', 'api::job.job'>;
+    description: Schema.Attribute.Text;
+    json_config: Schema.Attribute.JSON & Schema.Attribute.Required;
     locale: Schema.Attribute.String & Schema.Attribute.Private;
     localizations: Schema.Attribute.Relation<
       'oneToMany',
-      'api::job-run.job-run'
+      'api::job-configuration.job-configuration'
     > &
       Schema.Attribute.Private;
+    name: Schema.Attribute.String &
+      Schema.Attribute.Required &
+      Schema.Attribute.Unique;
     publishedAt: Schema.Attribute.DateTime;
-    start_time: Schema.Attribute.DateTime;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+  };
+}
+
+export interface ApiJobRunJobRun extends Struct.CollectionTypeSchema {
+  collectionName: 'job_runs';
+  info: {
+    description: '';
+    displayName: 'Job run';
+    pluralName: 'job-runs';
+    singularName: 'job-run';
+  };
+  options: {
+    draftAndPublish: false;
+  };
+  pluginOptions: {
+    i18n: {
+      localized: true;
+    };
+  };
+  attributes: {
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    end_time: Schema.Attribute.DateTime &
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: true;
+        };
+      }>;
+    job: Schema.Attribute.Relation<'oneToOne', 'api::job.job'>;
+    locale: Schema.Attribute.String;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::job-run.job-run'
+    >;
+    publishedAt: Schema.Attribute.DateTime;
+    start_time: Schema.Attribute.DateTime &
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: true;
+        };
+      }>;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
@@ -554,7 +637,7 @@ export interface ApiJobJob extends Struct.CollectionTypeSchema {
     singularName: 'job';
   };
   options: {
-    draftAndPublish: true;
+    draftAndPublish: false;
   };
   attributes: {
     assistants: Schema.Attribute.Relation<'manyToMany', 'api::agent.agent'>;
@@ -562,6 +645,10 @@ export interface ApiJobJob extends Struct.CollectionTypeSchema {
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
     customer: Schema.Attribute.Relation<'oneToOne', 'api::customer.customer'>;
+    job_configuration: Schema.Attribute.Relation<
+      'oneToOne',
+      'api::job-configuration.job-configuration'
+    >;
     job_id: Schema.Attribute.String &
       Schema.Attribute.Required &
       Schema.Attribute.Unique;
@@ -585,7 +672,7 @@ export interface ApiManualManual extends Struct.CollectionTypeSchema {
     singularName: 'manual';
   };
   options: {
-    draftAndPublish: true;
+    draftAndPublish: false;
   };
   attributes: {
     content: Schema.Attribute.Text;
@@ -742,7 +829,7 @@ export interface ApiThreadThread extends Struct.CollectionTypeSchema {
     singularName: 'thread';
   };
   options: {
-    draftAndPublish: true;
+    draftAndPublish: false;
   };
   attributes: {
     assistant: Schema.Attribute.Relation<'manyToOne', 'api::agent.agent'>;
@@ -780,7 +867,12 @@ export interface ApiVectorStoreVectorStore extends Struct.CollectionTypeSchema {
     singularName: 'vector-store';
   };
   options: {
-    draftAndPublish: true;
+    draftAndPublish: false;
+  };
+  pluginOptions: {
+    i18n: {
+      localized: true;
+    };
   };
   attributes: {
     assistants: Schema.Attribute.Relation<'manyToMany', 'api::agent.agent'>;
@@ -788,19 +880,23 @@ export interface ApiVectorStoreVectorStore extends Struct.CollectionTypeSchema {
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
     files: Schema.Attribute.Relation<'oneToMany', 'api::manual.manual'>;
-    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    locale: Schema.Attribute.String;
     localizations: Schema.Attribute.Relation<
       'oneToMany',
       'api::vector-store.vector-store'
-    > &
-      Schema.Attribute.Private;
+    >;
     publishedAt: Schema.Attribute.DateTime;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
     vector_store_id: Schema.Attribute.String &
       Schema.Attribute.Required &
-      Schema.Attribute.Unique;
+      Schema.Attribute.Unique &
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: true;
+        };
+      }>;
   };
 }
 
@@ -1314,9 +1410,11 @@ declare module '@strapi/strapi' {
       'admin::transfer-token-permission': AdminTransferTokenPermission;
       'admin::user': AdminUser;
       'api::agent.agent': ApiAgentAgent;
+      'api::api-key.api-key': ApiApiKeyApiKey;
       'api::chatbox.chatbox': ApiChatboxChatbox;
       'api::client.client': ApiClientClient;
       'api::customer.customer': ApiCustomerCustomer;
+      'api::job-configuration.job-configuration': ApiJobConfigurationJobConfiguration;
       'api::job-run.job-run': ApiJobRunJobRun;
       'api::job.job': ApiJobJob;
       'api::manual.manual': ApiManualManual;

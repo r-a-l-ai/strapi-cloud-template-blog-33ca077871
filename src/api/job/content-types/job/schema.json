@@ -8,7 +8,7 @@
     "description": ""
   },
   "options": {
-    "draftAndPublish": true
+    "draftAndPublish": false
   },
   "pluginOptions": {},
   "attributes": {
@@ -31,6 +31,11 @@
       "relation": "manyToMany",
       "target": "api::agent.agent",
       "inversedBy": "jobs"
+    },
+    "job_configuration": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "api::job-configuration.job-configuration"
     }
   }
 }

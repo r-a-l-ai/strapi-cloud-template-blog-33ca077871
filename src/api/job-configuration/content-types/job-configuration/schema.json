@@ -1,0 +1,28 @@
+{
+  "kind": "collectionType",
+  "collectionName": "job_configurations",
+  "info": {
+    "singularName": "job-configuration",
+    "pluralName": "job-configurations",
+    "displayName": "Job configuration"
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "name": {
+      "type": "string",
+      "required": true,
+      "unique": true
+    },
+    "description": {
+      "type": "text",
+      "unique": false
+    },
+    "json_config": {
+      "type": "json",
+      "required": true
+    }
+  }
+}

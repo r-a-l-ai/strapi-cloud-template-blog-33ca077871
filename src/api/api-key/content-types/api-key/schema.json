@@ -1,0 +1,35 @@
+{
+  "kind": "collectionType",
+  "collectionName": "api_keys",
+  "info": {
+    "singularName": "api-key",
+    "pluralName": "api-keys",
+    "displayName": "API key",
+    "description": ""
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "type": {
+      "type": "enumeration",
+      "enum": [
+        "openai"
+      ],
+      "required": true
+    },
+    "name": {
+      "type": "string",
+      "required": true,
+      "unique": true
+    },
+    "description": {
+      "type": "text"
+    },
+    "value_b64": {
+      "type": "text",
+      "required": true
+    }
+  }
+}
